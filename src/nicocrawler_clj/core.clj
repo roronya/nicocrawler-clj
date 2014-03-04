@@ -38,25 +38,26 @@
   (client/get (str "http://www.nicovideo.jp/watch/" video-id) {:cookie-store cs})
   (let [thumbinfo (get-thumbinfo video-id)
         movie-title (replace-slash (:title thumbinfo))
+        movie-path (str installpath "/tmp/" movie-title)
         movie-type (:movie_type thumbinfo)
         filename (str movie-title "." movie-type)
         get-flv-url (:url (get-flv video-id))]
 
     (with-open
-        [os (output-stream filename)]
+        [os (output-stream (str installpath "/tmp/" filename))]
       (.write os (:body (client/get get-flv-url {:as :byte-array :cookie-store cs}))))
 
     (cond
      (= movie-type "mp4")
-     (do (mp4->m4a movie-title) (mv (str movie-title ".m4a") path))
+     (do (mp4->m4a movie-path) (mv (str movie-path ".m4a") path))
      (= movie-type "flv")
-     (do (flv->mp3 movie-title) (mv (str movie-title ".mp3") path))
+     (do (flv->mp3 movie-path) (mv (str movie-path ".mp3") path))
      (= movie-type "swf")
-     (do (swf->mp3 movie-title) (mv (str movie-title ".mp3") path)))
+     (do (swf->mp3 movie-path) (mv (str movie-path ".mp3") path)))
 
     (println (str movie-title " is downloaded."))
 
-    (rm filename))
+    (rm (str installpath "/tmp/" filename)))
   video-id)
 
 

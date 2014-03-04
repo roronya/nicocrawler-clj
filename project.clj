@@ -1,4 +1,4 @@
-(defproject nicocrawler "0.2.2"
+(defproject nicocrawler "0.2.3"
   :description "ニコニコ動画のマイリストを監視して更新があると勝手にmp3かm4a形式でダウンロードしてきます"
   :url "http://"
   :license {:name "Eclipse Public License"
